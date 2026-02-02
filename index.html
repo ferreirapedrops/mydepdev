@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Print3D Shop - Pequenas Impressões 3D</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header e Navegação */
+        header {
+            background-color: #fff;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+        
+        .logo-icon {
+            color: #4a6ee0;
+            font-size: 28px;
+        }
+        
+        .logo-text {
+            font-size: 24px;
+            font-weight: 700;
+            color: #333;
+        }
+        
+        .logo-text span {
+            color: #4a6ee0;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 25px;
+        }
+        
+        nav a {
+            text-decoration: none;
+            color: #555;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+        
+        nav a:hover {
+            color: #4a6ee0;
+        }
+        
+        .header-icons {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .header-icons i {
+            font-size: 20px;
+            color: #555;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        
+        .header-icons i:hover {
+            color: #4a6ee0;
+        }
+        
+        .menu-toggle {
+            display: none;
+            font-size: 24px;
+            cursor: pointer;
+        }
+        
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://images.unsplash.com/photo-1581094794329-c8112a89af12?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            padding: 100px 0;
+            text-align: center;
+        }
+        
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto 30px;
+        }
+        
+        .btn {
+            display: inline-block;
+            background-color: #4a6ee0;
+            color: white;
+            padding: 12px 30px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+        
+        .btn:hover {
+            background-color: #3a5ad0;
+            transform: translateY(-3px);
+        }
+        
+        /* Categorias */
+        .categories {
+            padding: 80px 0;
+            background-color: #fff;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+        
+        .section-title h2 {
+            font-size: 2.5rem;
+            color: #333;
+            margin-bottom: 15px;
+        }
+        
+        .section-title p {
+            color: #777;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .categories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 30px;
+        }
+        
+        .category-card {
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+        }
+        
+        .category-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .category-img {
+            height: 200px;
+            background-color: #ddd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #4a6ee0;
+            font-size: 50px;
+        }
+        
+        .category-info {
+            padding: 20px;
+        }
+        
+        .category-info h3 {
+            margin-bottom: 10px;
+            color: #333;
+        }
+        
+        .category-info p {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        /* Produtos em Destaque */
+        .featured-products {
+            padding: 80px 0;
+        }
+        
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 30px;
+        }
+        
+        .product-card {
+            background-color: #fff;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .product-img {
+            height: 200px;
+            background-color: #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #555;
+            font-size: 40px;
+        }
+        
+        .product-info {
+            padding: 20px;
+        }
+        
+        .product-info h3 {
+            margin-bottom: 10px;
+            color: #333;
+        }
+        
+        .product-info p {
+            color: #666;
+            margin-bottom: 15px;
+            font-size: 0.9rem;
+        }
+        
+        .product-price {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .price {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #4a6ee0;
+        }
+        
+        .add-to-cart {
+            background-color: #4a6ee0;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .add-to-cart:hover {
+            background-color: #3a5ad0;
+        }
+        
+        /* Sobre */
+        .about {
+            padding: 80px 0;
+            background-color: #fff;
+        }
+        
+        .about-content {
+            display: flex;
+            align-items: center;
+            gap: 50px;
+        }
+        
+        .about-text {
+            flex: 1;
+        }
+        
+        .about-text h2 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            color: #333;
+        }
+        
+        .about-text p {
+            margin-bottom: 20px;
+            color: #666;
+        }
+        
+        .about-image {
+            flex: 1;
+            height: 400px;
+            background-color: #f0f0f0;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #4a6ee0;
+            font-size: 100px;
+        }
+        
+        /* Footer */
+        footer {
+            background-color: #222;
+            color: #ddd;
+            padding: 70px 0 20px;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+        
+        .footer-column h3 {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            color: white;
+        }
+        
+        .footer-links {
+            list-style: none;
+        }
+        
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+        
+        .footer-links a {
+            color: #bbb;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-links a:hover {
+            color: #4a6ee0;
+        }
+        
+        .newsletter-form {
+            display: flex;
+            margin-top: 15px;
+        }
+        
+        .newsletter-form input {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 5px 0 0 5px;
+        }
+        
+        .newsletter-form button {
+            background-color: #4a6ee0;
+            color: white;
+            border: none;
+            padding: 0 20px;
+            border-radius: 0 5px 5px 0;
+            cursor: pointer;
+        }
+        
+        .social-icons {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .social-icons a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background-color: #333;
+            border-radius: 50%;
+            color: white;
+            transition: background-color 0.3s;
+        }
+        
+        .social-icons a:hover {
+            background-color: #4a6ee0;
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid #444;
+            color: #aaa;
+            font-size: 0.9rem;
+        }
+        
+        /* Responsividade */
+        @media (max-width: 992px) {
+            .hero h1 {
+                font-size: 2.8rem;
+            }
+            
+            .about-content {
+                flex-direction: column;
+            }
+            
+            .about-image {
+                width: 100%;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .header-container {
+                flex-wrap: wrap;
+            }
+            
+            nav {
+                order: 3;
+                width: 100%;
+                margin-top: 15px;
+                display: none;
+            }
+            
+            nav.active {
+                display: block;
+            }
+            
+            nav ul {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .menu-toggle {
+                display: block;
+            }
+            
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+            
+            .hero p {
+                font-size: 1rem;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .hero {
+                padding: 70px 0;
+            }
+            
+            .hero h1 {
+                font-size: 1.8rem;
+            }
+            
+            .section-title h2 {
+                font-size: 2rem;
+            }
+            
+            .categories-grid, .products-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container header-container">
+            <a href="#" class="logo">
+                <i class="fas fa-cube logo-icon"></i>
+                <div class="logo-text">Print<span>3D</span> Shop</div>
+            </a>
+            
+            <div class="menu-toggle" id="menuToggle">
+                <i class="fas fa-bars"></i>
+            </div>
+            
+            <nav id="mainNav">
+                <ul>
+                    <li><a href="#home">Início</a></li>
+                    <li><a href="#categories">Categorias</a></li>
+                    <li><a href="#products">Produtos</a></li>
+                    <li><a href="#about">Sobre</a></li>
+                    <li><a href="#contact">Contato</a></li>
+                </ul>
+            </nav>
+            
+            <div class="header-icons">
+                <i class="fas fa-search" id="searchIcon"></i>
+                <i class="fas fa-shopping-cart" id="cartIcon"></i>
+                <i class="fas fa-user" id="userIcon"></i>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="container">
+            <h1>Impressões 3D de Qualidade</h1>
+            <p>Descubra nossa coleção exclusiva de pequenos objetos impressos em 3D. Decoração, utilitários e presentes únicos com designs criativos e materiais de alta qualidade.</p>
+            <a href="#products" class="btn">Explorar Produtos</a>
+        </div>
+    </section>
+
+    <!-- Categorias -->
+    <section class="categories" id="categories">
+        <div class="container">
+            <div class="section-title">
+                <h2>Categorias Populares</h2>
+                <p>Encontre o objeto perfeito para suas necessidades em nossas categorias principais</p>
+            </div>
+            
+            <div class="categories-grid">
+                <div class="category-card">
+                    <div class="category-img">
+                        <i class="fas fa-home"></i>
+                    </div>
+                    <div class="category-info">
+                        <h3>Decoração</h3>
+                        <p>Objetos decorativos para dar um toque especial à sua casa ou escritório.</p>
+                    </div>
+                </div>
+                
+                <div class="category-card">
+                    <div class="category-img">
+                        <i class="fas fa-tools"></i>
+                    </div>
+                    <div class="category-info">
+                        <h3>Utilitários</h3>
+                        <p>Itens práticos para o dia a dia, organizadores, suportes e muito mais.</p>
+                    </div>
+                </div>
+                
+                <div class="category-card">
+                    <div class="category-img">
+                        <i class="fas fa-gamepad"></i>
+                    </div>
+                    <div class="category-info">
+                        <h3>Jogos e Hobbies</h3>
+                        <p>Peças para jogos de tabuleiro, miniaturas, acessórios para hobbies.</p>
+                    </div>
+                </div>
+                
+                <div class="category-card">
+                    <div class="category-img">
+                        <i class="fas fa-gift"></i>
+                    </div>
+                    <div class="category-info">
+                        <h3>Presentes</h3>
+                        <p>Presentes únicos e personalizados para todas as ocasiões.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Produtos em Destaque -->
+    <section class="featured-products" id="products">
+        <div class="container">
+            <div class="section-title">
+                <h2>Produtos em Destaque</h2>
+                <p>Confira nossos produtos mais populares e bem avaliados pelos clientes</p>
+            </div>
+            
+            <div class="products-grid">
+                <div class="product-card">
+                    <div class="product-img">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <div class="product-info">
+                        <h3>Robô Decorativo</h3>
+                        <p>Pequeno robô impresso em 3D, perfeito para decoração de mesa ou estante.</p>
+                        <div class="product-price">
+                            <span class="price">R$ 24,90</span>
+                            <button class="add-to-cart">Adicionar</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="product-card">
+                    <div class="product-img">
+                        <i class="fas fa-leaf"></i>
+                    </div>
+                    <div class="product-info">
+                        <h3>Vaso para Plantas</h3>
+                        <p>Vaso moderno com design geométrico para pequenas suculentas.</p>
+                        <div class="product-price">
+                            <span class="price">R$ 32,50</span>
+                            <button class="add-to-cart">Adicionar</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="product-card">
+                    <div class="product-img">
+                        <i class="fas fa-headphones"></i>
+                    </div>
+                    <div class="product-info">
+                        <h3>Suporte para Fones</h3>
+                        <p>Organizador prático para seus fones de ouvido, com design minimalista.</p>
+                        <div class="product-price">
+                            <span class="price">R$ 18,75</span>
+                            <button class="add-to-cart">Adicionar</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="product-card">
+                    <div class="product-img">
+                        <i class="fas fa-puzzle-piece"></i>
+                    </div>
+                    <div class="product-info">
+                        <h3>Quebra-Cabeça 3D</h3>
+                        <p>Desafio divertido com peças que se encaixam formando uma escultura.</p>
+                        <div class="product-price">
+                            <span class="price">R$ 28,90</span>
+                            <button class="add-to-cart">Adicionar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="text-align: center; margin-top: 40px;">
+                <a href="#" class="btn">Ver Todos os Produtos</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sobre -->
+    <section class="about" id="about">
+        <div class="container">
+            <div class="about-content">
+                <div class="about-text">
+                    <h2>Sobre a Print3D Shop</h2>
+                    <p>Somos uma empresa especializada em impressão 3D de pequenos objetos, focada em qualidade, criatividade e satisfação do cliente. Utilizamos as mais avançadas impressoras 3D e materiais de alta resistência para criar produtos únicos e duráveis.</p>
+                    <p>Nossa missão é transformar ideias em objetos tangíveis, oferecendo soluções personalizadas e designs exclusivos para atender às necessidades de nossos clientes.</p>
+                    <p>Trabalhamos com PLA, ABS e PETG, materiais ecologicamente responsáveis e de alta qualidade, garantindo que cada peça seja produzida com precisão e cuidado.</p>
+                    <a href="#" class="btn">Saiba Mais</a>
+                </div>
+                
+                <div class="about-image">
+                    <i class="fas fa-print"></i>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="contact">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>Print3D Shop</h3>
+                    <p>Especialistas em impressão 3D de pequenos objetos. Qualidade, criatividade e inovação em cada peça.</p>
+                    <div class="social-icons">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-pinterest"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Links Rápidos</h3>
+                    <ul class="footer-links">
+                        <li><a href="#home">Início</a></li>
+                        <li><a href="#categories">Categorias</a></li>
+                        <li><a href="#products">Produtos</a></li>
+                        <li><a href="#about">Sobre Nós</a></li>
+                        <li><a href="#">Contato</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Informações</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">Política de Privacidade</a></li>
+                        <li><a href="#">Termos de Uso</a></li>
+                        <li><a href="#">FAQ</a></li>
+                        <li><a href="#">Envios e Entregas</a></li>
+                        <li><a href="#">Trocas e Devoluções</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Newsletter</h3>
+                    <p>Inscreva-se para receber novidades e ofertas exclusivas.</p>
+                    <form class="newsletter-form">
+                        <input type="email" placeholder="Seu e-mail" required>
+                        <button type="submit"><i class="fas fa-paper-plane"></i></button>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                <p>&copy; 2023 Print3D Shop. Todos os direitos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Menu toggle para dispositivos móveis
+        document.getElementById('menuToggle').addEventListener('click', function() {
+            document.getElementById('mainNav').classList.toggle('active');
+        });
+        
+        // Adicionar ao carrinho
+        const addToCartButtons = document.querySelectorAll('.add-to-cart');
+        addToCartButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const productName = this.parentElement.parentElement.querySelector('h3').textContent;
+                alert(`"${productName}" foi adicionado ao carrinho!`);
+                // Em uma implementação real, aqui você adicionaria o produto ao carrinho
+            });
+        });
+        
+        // Ícones do header
+        document.getElementById('searchIcon').addEventListener('click', function() {
+            alert('Funcionalidade de busca em desenvolvimento!');
+        });
+        
+        document.getElementById('cartIcon').addEventListener('click', function() {
+            alert('Carrinho de compras em desenvolvimento!');
+        });
+        
+        document.getElementById('userIcon').addEventListener('click', function() {
+            alert('Área do usuário em desenvolvimento!');
+        });
+        
+        // Suavizar rolagem para âncoras
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                if(targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if(targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                    
+                    // Fechar menu móvel se aberto
+                    document.getElementById('mainNav').classList.remove('active');
+                }
+            });
+        });
+        
+        // Newsletter form
+        const newsletterForm = document.querySelector('.newsletter-form');
+        newsletterForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const email = this.querySelector('input[type="email"]').value;
+            alert(`Obrigado por se inscrever com o e-mail: ${email}`);
+            this.reset();
+        });
+    </script>
+</body>
+</html>
