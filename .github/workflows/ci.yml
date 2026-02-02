@@ -1,26 +1,46 @@
-name: CI Node.js
+name: Static Site CI
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
   pull_request:
-    branches: [ "main" ]
+    branches: ["main"]
+
+permissions:
+  contents: read
 
 jobs:
-  build:
+  validate:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout do código
-        uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      - name: Configurar Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: "18"
+      - name: Ensure index.html exists
+        run: test -f index.html
 
-      - name: Instalar dependências
-        run: npm install
+      - name: Validate HTML (W3C Nu Validator)
+        run: |
+          curl -sS https://validator.w3.org/nu/?out=text --data-binary @index.html -H "Content-Type: text/html; charset=utf-8" | tee validation.txt
+          # Falha o job se houver "Error:" no output
+          if grep -q "^Error:" validation.txt; then
+            echo "HTML validation failed."
+            exit 1
+          fi
 
-      - name: Executar testes
-        run: npm test
+      - name: JS syntax check (parse only)
+        run: |
+          node --version
+          node --check index.html || true
+          # Extrai JS inline do HTML para validar sintaxe
+          python3 - <<'PY'
+          import re, pathlib, sys
+          html = pathlib.Path("index.html").read_text(encoding="utf-8", errors="ignore")
+          scripts = re.findall(r"<script[^>]*>(.*?)</script>", html, flags=re.S|re.I)
+          code = "\n\n".join(scripts).strip()
+          pathlib.Path("_inline.js").write_text(code, encoding="utf-8")
+          print(f"Extracted {len(scripts)} <script> blocks to _inline.js (chars={len(code)})")
+          PY
+          # Valida sintaxe do JS extraído (se estiver vazio, passa)
+          if [ -s _inline.js ]; then node --check _inline.js; else echo "No inline JS found."; fi
